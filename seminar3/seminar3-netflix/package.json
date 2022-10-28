@@ -1,11 +1,11 @@
 {
-  "name": "express-example",
+  "name": "express-netflix",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
-    "build": "tsc && node dist"
+    "dev" : "nodemon",
+    "build" : "tsc && node dist"
   },
   "dependencies": {
     "express": "^4.18.2"

@@ -11,7 +11,7 @@ app.use("/api", require("./api")); // use -> 모든 요청
 
 //* HTTP method - GET
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
-    res.send("마! 이게 서버다! 조금 바꿔보겠다..");
+    res.send("2차 세미나 안 듣고 과제 하려니까 죽을 맛이다...");
 });
 
 app.listen(PORT, () => {
