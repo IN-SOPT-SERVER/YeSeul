@@ -12,11 +12,11 @@ const getMovie = (req:Request, res:Response) => {
         return m.title === req.params.mediaId;
     });
 
-    if (movie) {
-        return res.status(200).json(movie);
-    } else {
+    if (!movie) {
         return res.status(400).json({errorMessage:" Movie was not found... "});
-    }
+    } 
+    
+    return res.status(200).json(movie);
 };
 
 export default getMovie;
