@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @unique @default(autoincrement())
+  userLoginId String    @db.VarChar(20)
+  password    String    @db.VarChar(50)
+  email       String?   @db.VarChar(100)
+  phone       String    @db.VarChar(20)
+  Profile     Profile[]
+}
+
+model Content {
+  id          Int      @id @default(autoincrement())
+  class       String   @db.VarChar(20)
+  title       String   @db.VarChar(50)
+  character   String   @db.VarChar(100)
+  genre       String   @db.VarChar(100)
+  description String?  @db.VarChar(200)
+  episodeNum  Int
+  age         Int
+  image       String   @db.VarChar(200)
+  Rating      Rating[]
+}
+
+model Profile {
+  id        Int      @id @unique @default(autoincrement())
+  name      String   @db.VarChar(20)
+  image     String?  @db.VarChar(200)
+  password  String   @db.VarChar(4)
+  isKids    Boolean
+  isPreview Boolean  @default(true)
+  isNext    Boolean  @default(true)
+  userId    Int?
+  User      User?    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "profile_user_id_fk")
+  Rating    Rating[]
+}
+
+model Rating {
+  id        Int      @id @unique @default(autoincrement())
+  rating    Int
+  contentId Int?
+  profileId Int?
+  Content   Content? @relation(fields: [contentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rating_content_id_fk")
+  Profile   Profile? @relation(fields: [profileId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rating_profile_id_fk")
+}
