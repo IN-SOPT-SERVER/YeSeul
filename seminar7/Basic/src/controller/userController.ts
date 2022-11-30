@@ -100,7 +100,10 @@ const getUserById = async (req: Request, res: Response) => {
 
 //* 유저 전체 조회
 const getAllUser = async (req: Request, res: Response) => {
-  const data = await userService.getAllUser();
+
+  const { page, limit } = req.params;  
+
+  const data = await userService.getAllUser(+page, +limit);
 
   if(!data){
     return res.status(sc.NO_CONTENT).send(success(sc.NO_CONTENT, rm.READ_ALL_USERS_SUCCESS, data))
@@ -108,7 +111,6 @@ const getAllUser = async (req: Request, res: Response) => {
   return res.status(sc.OK).send(success(sc.OK, rm.READ_ALL_USERS_SUCCESS, data))
 };
 
-//* 유저 정보 업데이트
 //* 유저 정보 업데이트
 const updateUser = async (req: Request, res: Response) => {
   const userUpdateDto: UserUpdateDTO = req.body;
@@ -131,6 +133,18 @@ const deleteUser = async (req: Request, res: Response) => {
   return res.status(sc.OK).send(success(sc.OK, rm.DELETE_USER_SUCCESS));
 };
 
+//*이름으로 유저 검색
+//* GET ~api/user?keyword=세훈 
+const searchUserByName = async (req: Request, res: Response) => {
+  const { keyword, option } = req.query; // 세훈
+
+  const data = await userService.searchUserByName(keyword as string, option as string);
+
+  if (!data) {
+    return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.SEARCH_USER_FAIL));
+  }
+  return res.status(sc.OK).send(success(sc.OK, rm.SEARCH_USER_SUCCESS, data));
+}
 
 const userController = {
   getUserById,
@@ -138,7 +152,8 @@ const userController = {
   getAllUser,
   updateUser,
   deleteUser,
-  signInUser
+  signInUser,
+  searchUserByName
 };
 
 export default userController; //각 함수들을 userController 로 묶어서 한번에 내보내기

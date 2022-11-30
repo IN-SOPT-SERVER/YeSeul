@@ -25,8 +25,12 @@ const createUser = async (userCreateDto: UserCreateDTO) => {
 };
 
 //* 유저 전체 조회
-const getAllUser = async (): Promise<UserResDTO[]> => {
-  const data = await prisma.user.findMany();
+// page: 페이지 넘버, limit : 페이지당 몇개씩 보여줄건지
+const getAllUser = async (page: number, limit : number): Promise<UserResDTO[]> => {
+  const data = await prisma.user.findMany({ // 페이지네이션 !
+    skip : (page - 1) * limit, // 2페이지면 앞에 limit 개수 건너뛰어야하기 때문이다 !
+    take : limit
+  });
   return data;
 };
 
@@ -104,13 +108,67 @@ const signIn = async (userSignInDto: UserSignInDTO) => {
   }
 };
 
+//* 이름으로 유저 검색
+const searchUserByName = async (keyword: string, option: string) => {
+
+  // 유저 최신순
+  if ( option == 'desc' ) {
+    const user = await prisma.user.findMany({
+      where : {
+        userName : {
+          contains: keyword // 키워드가 포함되어 있는 이름을 가진 유저만 추출
+        }
+      },
+      orderBy : { // 정렬 알고리즘을 우리가 interface로 만들어서 해보는거 내가 실습으로 해보자 !
+        createdAt : "desc"
+      }
+    });
+
+    return user;
+  }
+
+  //유저 오래된순
+  if ( option == 'asc') {
+    const user = await prisma.user.findMany({
+      where : {
+        userName : {
+          contains: keyword // 키워드가 포함되어 있는 이름을 가진 유저만 추출
+        }
+      },
+      orderBy : { // 정렬 알고리즘을 우리가 interface로 만들어서 해보는거 내가 실습으로 해보자 !
+        createdAt : "asc"
+      }
+    });
+
+    return user;
+  }
+
+  if ( option == "nameDesc") {
+    const user = await prisma.user.findMany({
+      where : {
+        userName : {
+          contains : keyword
+        },
+      },
+      orderBy : {
+        userName : "desc"
+      }
+    })
+
+    return user;
+  }
+
+}
+
+
 const userService = {
   getUserById,
   createUser,
   getAllUser,
   updateUser,
   deleteUser,
-  signIn
+  signIn,
+  searchUserByName
 };
 
 export default userService;
