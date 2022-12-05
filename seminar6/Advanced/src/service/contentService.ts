@@ -1,28 +1,22 @@
 import { PrismaClient } from "@prisma/client";
+import { ContentResDTO } from "../interfaces/Content/ContentResDTO";
+import { ContentRatingDTO } from "../interfaces/ContentRating/ContentRatingDTO";
 const prisma = new PrismaClient();
 
 //* 컨텐츠 평가 생성
-const createContentRating = async (contentId: number, profileId: number, rating: number) => {
+const createContentRating = async (ContentRatingDto : ContentRatingDTO) => {
     const data = await prisma.rating.create({
       data: {
-        Content : {
-            connect : {
-                    id : contentId
-            }
-        },
-        Profile : {
-            connect : {
-                    id : profileId
-            }
-        },
-        rating
+        contentId : ContentRatingDto.contentId,
+        profileId : ContentRatingDto.profileId,
+        rating : ContentRatingDto.rating
       }
     });
     return data;
 };
 
 //* 컨텐츠 내용 조회
-const getContentById = async (contentId : number) => {
+const getContentById = async (contentId : number) : Promise<ContentResDTO | null>=> {
     const data = await prisma.content.findUnique({
         where : {
             id : contentId
@@ -32,15 +26,11 @@ const getContentById = async (contentId : number) => {
 };
 
 //* 컨텐츠 평가 내용 조회
-const getContentRating = async (contentId: number, profileId: number) => {
+const getContentRating = async (ContentRatingDto : ContentRatingDTO) => {
     const data = await prisma.rating.findMany({
         where : {
-            Content : {
-                id : contentId
-            },
-            Profile : {
-                id: profileId
-            }
+            contentId : ContentRatingDto.contentId,
+            profileId : ContentRatingDto.profileId
         },
         select : {
             Content : {
@@ -59,31 +49,31 @@ const getContentRating = async (contentId: number, profileId: number) => {
 };
 
 //* 컨텐츠 평가 업데이트
-const updateContentRating = async (contentId: number, profileId: number, rating: number) => {
+const updateContentRating = async (ContentRatingDto : ContentRatingDTO) => {
     const data = await prisma.rating.updateMany({
-        where :{
-            contentId,
-            profileId
+        where : {
+            contentId : ContentRatingDto.contentId,
+            profileId : ContentRatingDto.profileId
         },
         data: {
-            rating
+            rating : ContentRatingDto.rating
         }
     });
     return data;
 };
 
 //* 컨텐츠 평가 삭제
-const deleteContentRating = async (contentId: number, profileId: number) => {
+const deleteContentRating = async (ContentRatingDto : ContentRatingDTO) => {
     await prisma.rating.deleteMany({
         where : {
-            contentId,
-            profileId
+            contentId : ContentRatingDto.contentId,
+            profileId : ContentRatingDto.profileId
         }
     });
 };
 
 //* 평가 전체 조회
-const getAllRating = async () => {
+const getAllRating = async () : Promise<ContentRatingDTO[]> => {
     const data = await prisma.rating.findMany();
     return data;
 };

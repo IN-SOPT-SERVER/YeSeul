@@ -43,10 +43,10 @@ model Profile {
 }
 
 model Rating {
-  id        Int      @id @unique @default(autoincrement())
+  id        Int     @id @unique @default(autoincrement())
   rating    Int
-  contentId Int?
-  profileId Int?
-  Content   Content? @relation(fields: [contentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rating_content_id_fk")
-  Profile   Profile? @relation(fields: [profileId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rating_profile_id_fk")
+  contentId Int
+  profileId Int
+  Content   Content @relation(fields: [contentId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rating_content_id_fk")
+  Profile   Profile @relation(fields: [profileId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rating_profile_id_fk")
 }

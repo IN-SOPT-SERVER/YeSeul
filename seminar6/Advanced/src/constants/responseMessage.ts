@@ -25,6 +25,7 @@ export default {
     // 컨텐츠
     READ_CONTENT_SUCCESS: "컨텐츠 조회 성공",
     READ_CONTENT_FAIL: "컨텐츠 조회 실패",
+    NO_CONTENT: "존재하는 컨텐츠가 없습니다.",
 
     // 컨텐츠 평가
     READ_ALL_RATING_SUCCESS: "모든 컨텐츠 평가 조회 성공",
