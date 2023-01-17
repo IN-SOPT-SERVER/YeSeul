@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { ContentResDTO } from "../interfaces/content/ContentResDTO";
+import { ContentRatingDeleteDTO } from "../interfaces/contentRating/ContentRatingDeleteDTO";
 import { ContentRatingDTO } from "../interfaces/contentRating/ContentRatingDTO";
 const prisma = new PrismaClient();
 
@@ -63,11 +64,11 @@ const updateContentRating = async (ContentRatingDto : ContentRatingDTO) => {
 };
 
 //* 컨텐츠 평가 삭제
-const deleteContentRating = async (ContentRatingDto : ContentRatingDTO) => {
+const deleteContentRating = async (ContentRatingDeleteDto : ContentRatingDeleteDTO) => {
     await prisma.rating.deleteMany({
         where : {
-            contentId : ContentRatingDto.contentId,
-            profileId : ContentRatingDto.profileId
+            contentId : ContentRatingDeleteDto.contentId,
+            profileId : ContentRatingDeleteDto.profileId
         }
     });
 };

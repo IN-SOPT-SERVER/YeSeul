@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { rm, sc } from "../constants";
 import { fail, success } from "../constants/response";
 import { ContentResDTO } from "../interfaces/content/ContentResDTO";
+import { ContentRatingDeleteDTO } from "../interfaces/contentRating/ContentRatingDeleteDTO";
 import { ContentRatingDTO } from "../interfaces/contentRating/ContentRatingDTO";
 import { contentService } from "../service";
 
@@ -51,14 +52,14 @@ const getContentRating = async (req: Request, res: Response) => {
 //* 컨텐츠 평가 업데이트
 //* PATCH /contents/rating
 const updateContentRating = async (req: Request, res: Response) => {
-    const { contentId, profileId, rating } = req.body;
+    const ContentRatingDto : ContentRatingDTO = req.body;
 
-    const data = await contentService.updateContentRating(+contentId, +profileId, +rating); 
+    const data = await contentService.updateContentRating(ContentRatingDto); 
     
     if (!data) {
-        return res.status(404).json({ status: 404, message: "컨텐츠 평가 업데이트 실패" });
+        return res.status(sc.NOT_FOUND).send(fail(sc.NOT_FOUND, rm.UPDATE_RATING_FAIL));
     }
-    return res.status(200).json({ status: 200, message: "컨텐츠 평가 업데이트 성공", data }); 
+    return res.status(sc.OK).send(success(sc.OK, rm.UPDATE_RATING_SUCCESS)); 
 
 };
 
@@ -69,7 +70,7 @@ const deleteContentRating = async (req: Request, res: Response) => {
 
     const data = await contentService.deleteContentRating(ContetnRatingDeleteDto); 
     
-    return res.status(200).json({ status: 200, message: "컨텐츠 평가 삭제 성공", data }); 
+    return res.status(sc.OK).send(success(sc.OK, rm.DELETE_RATING_SUCCESS)); 
 };
 
 //* 평가 전체 조회
@@ -86,9 +87,9 @@ const contentController = {
     createContentRating,
     getContentById,
     getContentRating,
-    //updateContentRating,
-    //deleteContentRating,
-    //getAllRating
+    updateContentRating,
+    deleteContentRating,
+    getAllRating
 };
   
 export default contentController;
