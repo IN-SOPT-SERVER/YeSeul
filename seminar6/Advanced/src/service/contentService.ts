@@ -1,13 +1,13 @@
 import { PrismaClient } from "@prisma/client";
-import { ContentResDTO } from "../interfaces/Content/ContentResDTO";
-import { ContentRatingDTO } from "../interfaces/ContentRating/ContentRatingDTO";
+import { ContentResDTO } from "../interfaces/content/ContentResDTO";
+import { ContentRatingDTO } from "../interfaces/contentRating/ContentRatingDTO";
 const prisma = new PrismaClient();
 
 //* 컨텐츠 평가 생성
-const createContentRating = async (ContentRatingDto : ContentRatingDTO) => {
+const createContentRating = async (contentId : number, ContentRatingDto : ContentRatingDTO) => {
     const data = await prisma.rating.create({
       data: {
-        contentId : ContentRatingDto.contentId,
+        contentId,
         profileId : ContentRatingDto.profileId,
         rating : ContentRatingDto.rating
       }
@@ -26,7 +26,7 @@ const getContentById = async (contentId : number) : Promise<ContentResDTO | null
 };
 
 //* 컨텐츠 평가 내용 조회
-const getContentRating = async (ContentRatingDto : ContentRatingDTO) => {
+const getContentRating = async (ContentRatingDto : ContentRatingDTO)=> {
     const data = await prisma.rating.findMany({
         where : {
             contentId : ContentRatingDto.contentId,
@@ -77,7 +77,6 @@ const getAllRating = async () : Promise<ContentRatingDTO[]> => {
     const data = await prisma.rating.findMany();
     return data;
 };
-
 
 const contentService = {
     createContentRating,

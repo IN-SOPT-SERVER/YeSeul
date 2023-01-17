@@ -31,9 +31,12 @@ export default {
     READ_ALL_RATING_SUCCESS: "모든 컨텐츠 평가 조회 성공",
     UPDATE_RATING_SUCCESS: "컨텐츠 평가 수정 성공",
     DELETE_RATING_SUCCESS: "컨텐츠 평가 삭제 성공",
+    UPDATE_RATING_FAIL: "컨텐츠 평가 수정 실패",
+    DELETE_RATING_FAIL: "컨텐츠 평가 삭제 실패",
     CREATE_RATING_SUCCESS: "컨텐츠 평가 생성 성공",
     CREATE_RATING_FAIL: "컨텐츠 평가 생성 실패",
     NO_CONTENT_RATING: "존재하는 컨텐츠 평가가 없습니다.",
+    READ_CONTENT_RATING_SUCCESS: "해당하는 컨텐츠 평가 조회 성공",
   
     // 토큰
     CREATE_TOKEN_SUCCESS: "토큰 재발급 성공",

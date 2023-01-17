@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { rm, sc } from "../constants";
-import { success } from "../constants/response";
-import { ContentRatingDeleteDTO } from "../interfaces/ContentRating/ContentRatingDeleteDTO";
+import { fail, success } from "../constants/response";
+import { ContentResDTO } from "../interfaces/content/ContentResDTO";
+import { ContentRatingDTO } from "../interfaces/contentRating/ContentRatingDTO";
 import { contentService } from "../service";
 
 
@@ -11,14 +12,14 @@ const createContentRating = async (req: Request, res: Response) => {
     const { contentId } = req.params;
 
     //0: 맘에 안들어요, 1: 좋아요, 2: 최고에요
-    const { rating, profileId } = req.body;
+    const ContentRatingDto: ContentRatingDTO = req.body;
 
-    const data = await contentService.createContentRating(+contentId, +profileId, +rating); 
+    const data = await contentService.createContentRating(+contentId, ContentRatingDto); 
 
     if (!data) {
-        return res.status(404).json({ status: 404, message: "컨텐츠 평가 생성 실패" });
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.CREATE_RATING_FAIL));
     }
-    return res.status(200).json({ status: 200, message: "컨텐츠 평가 생성 성공", data }); 
+    return res.status(sc.CREATED).send(success(sc.CREATED, rm.CREATE_RATING_SUCCESS, data));
 };
 
 //* 컨텐츠 내용 조회
@@ -26,29 +27,29 @@ const createContentRating = async (req: Request, res: Response) => {
 const getContentById = async (req: Request, res: Response) => {
     const { contentId } = req.params;
 
-    const data = await contentService.getContentById(+contentId); 
+    const data = await contentService.getContentById(+contentId);
 
     if (!data) {
-        return res.status(404).json({ status: 404, message: "해당 컨텐츠 조회 실패" });
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.READ_CONTENT_FAIL));
     }
-    return res.status(200).json({ status: 200, message: "해당 컨텐츠 조회 성공", data }); 
+    return res.status(sc.OK).send(success(sc.OK, rm.READ_CONTENT_SUCCESS, data)); 
 };
 
 //* 컨텐츠 평가 조회
+//* GET /content/rating
 const getContentRating = async (req: Request, res: Response) => {
-    const { contentId } = req.params;
-    const { profileId } = req.body;
+    const ContentRatingDto : ContentRatingDTO = req.body;
 
-    const data = await contentService.getContentRating(+contentId, +profileId);
+    const data = await contentService.getContentRating(ContentRatingDto);
 
     if (!data) {
-        return res.status(404).json({ status: 404, message: "해당 컨텐츠 평가 조회 실패" });
+        return res.status(sc.NOT_FOUND).send(fail(sc.NOT_FOUND, rm.NO_CONTENT_RATING));
     }
-    return res.status(200).json({ status: 200, message: "해당 컨텐츠 평가 조회 성공", data }); 
+    return res.status(sc.OK).send(success(sc.OK, rm.READ_CONTENT_RATING_SUCCESS)); 
 };
 
 //* 컨텐츠 평가 업데이트
-// PATCH /contents/rating
+//* PATCH /contents/rating
 const updateContentRating = async (req: Request, res: Response) => {
     const { contentId, profileId, rating } = req.body;
 
@@ -62,6 +63,7 @@ const updateContentRating = async (req: Request, res: Response) => {
 };
 
 //* 컨텐츠 평가 삭제
+//* DELETE /content/rating
 const deleteContentRating = async (req: Request, res: Response) => {
     const ContetnRatingDeleteDto : ContentRatingDeleteDTO = req.body;
 
@@ -84,9 +86,9 @@ const contentController = {
     createContentRating,
     getContentById,
     getContentRating,
-    updateContentRating,
-    deleteContentRating,
-    getAllRating
+    //updateContentRating,
+    //deleteContentRating,
+    //getAllRating
 };
   
 export default contentController;

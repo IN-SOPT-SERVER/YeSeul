@@ -10,7 +10,7 @@ datasource db {
 model User {
   id          Int       @id @unique @default(autoincrement())
   userLoginId String    @db.VarChar(20)
-  password    String    @db.VarChar(50)
+  password    String    @db.VarChar(200)
   email       String?   @db.VarChar(100)
   phone       String    @db.VarChar(20)
   Profile     Profile[]
