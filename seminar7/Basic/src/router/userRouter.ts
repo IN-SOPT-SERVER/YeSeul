@@ -5,11 +5,14 @@ import { auth } from "../middlewares"
 
 const router: Router = Router();
 
+//~ 이름으로 유저 검색 - GET api/user/search?keyword={}&option={}
+router.get("/search", userController.searchUserByName);
+
 //* 유저 조회 - GET api/user/:userId
 router.get("/:userId", auth, userController.getUserById);
 
 //* 전체 유저 조회 - GET api/user
-router.get("/", auth, userController.getAllUser); //R
+router.get("/", userController.getAllUser); //R
 
 //* 유저 정보 업데이트 - PATCH api/user/:userId
 router.patch("/:userId", [body("name").notEmpty(), body("email").isEmail(), body("password").isLength({ min: 6 })], auth, userController.updateUser); //U
@@ -35,5 +38,7 @@ router.post(
   ],
   userController.signInUser
 );
+
+
 
 export default router;
